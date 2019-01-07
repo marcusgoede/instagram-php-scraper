@@ -810,25 +810,9 @@ class Instagram
      */
     public function getUsernameById($id)
     {
-        $response = Request::get(Endpoints::getAccountJsonPrivateInfoLinkByAccountId($id), $this->generateHeaders($this->userSession));
-
-        if (static::HTTP_NOT_FOUND === $response->code) {
-            throw new InstagramNotFoundException('Failed to fetch account with given id');
-        }
-
-        if (static::HTTP_OK !== $response->code) {
-            throw new InstagramException('Response code is ' . $response->code . '. Body: ' . static::getErrorBody($response->body) . ' Something went wrong. Please report issue.', $response->code);
-        }
-
-        if (!($responseArray = json_decode($response->raw_body, true))) {
-            throw new InstagramException('Response does not JSON');
-        }
-
-        if ($responseArray['status'] !== 'ok') {
-            throw new InstagramException((isset($responseArray['message']) ? $responseArray['message'] : 'Unknown Error'));
-        }
-
-        return $responseArray['user']['username'];
+        $accountMedias = $this->getMediasByUserId($id);
+        $media_id = $accountMedias[0]->getId();
+        return $this->getMediaById($media_id)->getOwner()->getUsername();
     }
 
     /**
