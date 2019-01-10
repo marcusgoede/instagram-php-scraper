@@ -194,8 +194,8 @@ class Media extends AbstractModel
         $alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
         $code = '';
         while ($id > 0) {
-            $remainder = $id % 64;
-            $id = ($id - $remainder) / 64;
+            $remainder = bcmod('' . $id, 64);
+            $id = bcdiv(bcsub($id, $remainder), 64);
             $code = $alphabet{$remainder} . $code;
         };
         return $code;

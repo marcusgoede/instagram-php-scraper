@@ -799,6 +799,9 @@ class Instagram
     public function getAccountById($id)
     {
         $username = $this->getUsernameById($id);
+        if (empty($username)) {
+            return null;
+        }
         return $this->getAccount($username);
     }
 
@@ -811,6 +814,9 @@ class Instagram
     public function getUsernameById($id)
     {
         $accountMedias = $this->getMediasByUserId($id);
+        if (empty($accountMedias)) {
+            return null;
+        }
         $media_id = $accountMedias[0]->getId();
         return $this->getMediaById($media_id)->getOwner()->getUsername();
     }
